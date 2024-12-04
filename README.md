@@ -22,6 +22,7 @@ The project files are located at `Assets/LiveShow` folder. The project includes 
 The example scene `Assets/LiveShow/Scenes/Example` demonstrates the full pipeline with act and scene buttons.
 
 ![image](https://github.com/vltmedia/Unity-Basic-Live-Show-Player-With-Scene-and-Act-Management/blob/main/Docs/images/PreviewImage.png?raw=true)
+![image](https://github.com/vltmedia/Unity-Basic-Live-Show-Player-With-Scene-and-Act-Management/blob/main/Docs/images/Player_001.gif?raw=true)
 
 ## Features
 
