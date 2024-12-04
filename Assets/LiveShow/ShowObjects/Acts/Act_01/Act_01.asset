@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87cee7a265864d54cba1beacd7ae665b, type: 3}
+  m_Name: Act_01
+  m_EditorClassIdentifier: 
+  actName: Act 1
+  scenes:
+  - {fileID: 11400000, guid: 85a6a7872ebdfed488fa298220f4a189, type: 2}
+  - {fileID: 11400000, guid: 640d095fc029d724f86733870e2bd590, type: 2}
+  - {fileID: 11400000, guid: 157e2e6be2a6c9d4aa95ac9171406d18, type: 2}
