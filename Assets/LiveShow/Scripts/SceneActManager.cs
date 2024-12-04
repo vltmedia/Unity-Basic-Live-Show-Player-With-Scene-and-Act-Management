@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SceneActManager : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class SceneActManager : MonoBehaviour
     public Transform actButtonContainer;   // Parent container for Act buttons
     public VideoManager videoManager;      // Reference to the VideoManager
     public Transform sceneContainerPosition;      // Reference to the VideoManager
-    public Canvas sceneCanvas;      // Reference to the VideoManager
+    public Transform sceneCanvas;      // Reference to the VideoManager
 
     [Header("Data")]
     public ShowData showData;
@@ -17,6 +18,9 @@ public class SceneActManager : MonoBehaviour
 
     private SceneData currentScene;        // Tracks the currently active scene
     public ActButtonUI currentAct;
+    public  bool isTransitioning = false;        // Tracks if the scene is transitioning
+    public bool sceneLoaded { get { return currentScene != null; } }
+    public UnityEvent<string> onMessage = new UnityEvent<string>();
     /// <summary>
     /// Initializes the Act and Scene UI at the start.
     /// </summary>
@@ -67,15 +71,20 @@ public class SceneActManager : MonoBehaviour
         }
     }
 
+    public void SendStatusMessage(string statusMessage)
+    {
+        onMessage?.Invoke(statusMessage);
+    }
+
     /// <summary>
     /// Handles scene transitions when a scene button is clicked.
     /// </summary>
     /// <param name="scene">The new scene to transition to.</param>
     public void OnSceneButtonClicked(SceneData scene)
     {
-        if (currentScene == scene)
+        if (currentScene == scene || isTransitioning)
             return; // Do nothing if the clicked scene is already active
-
+        isTransitioning = true;
         StartCoroutine(TransitionScene(scene));
     }
 
@@ -85,6 +94,7 @@ public class SceneActManager : MonoBehaviour
     /// <param name="newScene">The new scene to load.</param>
     private IEnumerator TransitionScene(SceneData newScene)
     {
+
         // Determine if there’s a transition video from the current scene
         var transitionVideo = currentScene != null ? currentScene.videoOut : null;
         // Update the current scene

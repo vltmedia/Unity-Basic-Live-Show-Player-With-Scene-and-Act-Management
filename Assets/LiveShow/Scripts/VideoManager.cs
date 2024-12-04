@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
+using System.Xml.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -12,12 +15,64 @@ public class VideoManager : MonoBehaviour
     public float blackHoldDuration = 1.0f; // Duration to hold black after fade-out
     public int renderTextureWidth = 1920;  // Width of the RenderTexture
     public int renderTextureHeight = 1080; // Height of the RenderTexture
+    public Button blackoutButton;
+    public Button fadeToggleButton;
+    public UnityEvent<float> onTransitionLerp = new UnityEvent<float>();
 
     private RenderTexture renderTexture;   // The RenderTexture to hold video frames
 
     private void Start()
     {
+        if (blackoutButton)
+        {
+            blackoutButton.onClick.AddListener(FadeBlack);
+        }
+        if (fadeToggleButton)
+        {
+            fadeToggleButton.onClick.AddListener(FadeToggle);
+        }
         SetupRenderTexture();
+    }
+
+    private void FadeToggle()
+    {
+        if(SceneActManager.Instance.sceneLoaded == false)
+        {
+            SceneActManager.Instance.SendStatusMessage("No scene loaded");
+            return;
+        }
+        if(SceneActManager.Instance.isTransitioning)
+        {
+            SceneActManager.Instance.SendStatusMessage("Please wait for the transition to finish.");
+            return;
+        }
+        switch(fadeState)
+        {
+            case 0:
+                SceneActManager.Instance.SendStatusMessage("Fade Toggled: Fading In");
+
+                StartCoroutine(Fade(1));
+                break;
+            case 1:
+                SceneActManager.Instance.SendStatusMessage("Fade Toggled: Fading Out");
+
+                StartCoroutine(Fade(0));
+                break;
+        }
+    }
+
+    public static VideoManager Instance;
+
+        private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
 
     /// <summary>
@@ -75,11 +130,28 @@ public class VideoManager : MonoBehaviour
         // Fade in the new video
         yield return Fade(0);
     }
+    public void FadeBlack()
+    {
+        if (SceneActManager.Instance.sceneLoaded == false)
+        {
+            SceneActManager.Instance.SendStatusMessage("No scene loaded");
+            return;
+        }
+        if (SceneActManager.Instance.isTransitioning)
+        {
+            SceneActManager.Instance.SendStatusMessage("Please wait for the transition to finish.");
+            return;
+        }
+        SceneActManager.Instance.SendStatusMessage("Fading to black." );
+
+        StartCoroutine(Fade(1));
+    }
     public IEnumerator PlayVideo(VideoClip videoPath, VideoClip transitionVideo = null, bool loop = true)
     {
         // Fade out the current video
+        if (fadeState != 1) {
         yield return Fade(1);
-
+    }
 
         // Play the transition video, if provided
         //if (transitionVideo)
@@ -101,7 +173,9 @@ public class VideoManager : MonoBehaviour
 
         // Fade in the new video
         yield return Fade(0);
+        SceneActManager.Instance.isTransitioning = false;
     }
+    public float fadeState = 0;
     /// <summary>
     /// Fades the overlay in or out.
     /// </summary>
@@ -114,7 +188,9 @@ public class VideoManager : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / fadeDuration);
+            onTransitionLerp.Invoke(alpha);
             fadeOverlay.color = new Color(0, 0, 0, alpha);
+            fadeState = alpha;
             yield return null;
         }
     }

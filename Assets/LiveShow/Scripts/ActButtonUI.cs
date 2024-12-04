@@ -10,7 +10,7 @@ public class ActButtonUI : MonoBehaviour
     public Image indicatorImage;                  // Indicator image for the Act
     public GameObject sceneButtonContainerPrefab; // Prefab for the floating scene container
     public GameObject sceneButtonPrefab; // Prefab for the floating scene container
-    public Canvas canvas { get { return SceneActManager.Instance.sceneCanvas; } } // Reference to the UI canvas
+    public Transform canvas { get { return SceneActManager.Instance.sceneCanvas; } } // Reference to the UI canvas
     private GameObject sceneButtonContainer;      // Instance of the floating scene container
 
     private ActData actData;                      // Data for this act
@@ -41,6 +41,8 @@ public class ActButtonUI : MonoBehaviour
 
     public void ToggleActClicked()
     {
+        SceneActManager.Instance.SendStatusMessage("Act clicked: " + actData.actName);
+
         SceneActManager.Instance.ToggleActClicked(this);
     }
 
@@ -67,7 +69,10 @@ public class ActButtonUI : MonoBehaviour
     private void CreateSceneButtonContainer()
     {
         // Instantiate the floating container as a sibling of the canvas
-        sceneButtonContainer = Instantiate(sceneButtonContainerPrefab, SceneActManager.Instance.sceneContainerPosition);
+        sceneButtonContainer = Instantiate(sceneButtonContainerPrefab, canvas);
+        //sceneButtonContainer.transform.position = SceneActManager.Instance.sceneContainerPosition.position;
+        sceneButtonContainer.transform.SetParent(canvas);
+        sceneButtonContainer.transform.position = Vector3.zero;
         sceneButtonContainer.SetActive(false);
 
         // Populate the container with scene buttons
@@ -82,6 +87,12 @@ public class ActButtonUI : MonoBehaviour
 
     private void HandleSceneClicked(SceneData data, SceneButtonUI scene)
     {
+
+        if (SceneActManager.Instance.isTransitioning)
+        {
+            SceneActManager.Instance.SendStatusMessage("Please wait for the transition to finish.");
+            return;
+        }
         try
         {
             currentSceneButton?.SetIndicator(false);
@@ -90,6 +101,7 @@ public class ActButtonUI : MonoBehaviour
         }
         currentSceneButton = scene;
         currentSceneButton.SetIndicator(true);
+        SceneActManager.Instance.SendStatusMessage("Loading scene: " + data.sceneName);
 
         onSceneClicked?.Invoke(data);
     }
