@@ -1,6 +1,6 @@
 # Unity Basic Live Show Player With Scene and Act Management
 
-This project implements a Unity-based video playback and transition system with dynamically managed scenes and acts. The pipeline includes smooth fade transitions, black hold durations, and seamless integration with a modular UI. Video is output via `Spout` or `Syphon` to external applications for live shows or installations, the name is `ShowComposite`.
+This project implements a basic Unity-based video playback and transition system with dynamically managed scenes and acts. The pipeline includes smooth fade transitions, black hold durations, and seamless integration with a modular UI. Video is output via `Spout` or `Syphon` to external applications for live shows or installations, the name is `ShowComposite`.
 
 ## Project Data
 
