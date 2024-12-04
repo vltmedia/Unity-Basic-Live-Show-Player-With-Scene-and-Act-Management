@@ -2,9 +2,10 @@
 
 This project implements a Unity-based video playback and transition system with dynamically managed scenes and acts. The pipeline includes smooth fade transitions, black hold durations, and seamless integration with a modular UI. Video is output via `Spout` or `Syphon` to external applications for live shows or installations, the name is `ShowComposite`.
 
-
 ## Project Data
+
 The project files are located at `Assets/LiveShow` folder. The project includes the following assets:
+
 - Media
   - The `Media` folder contains video files for testing.
 - Prefabs
@@ -17,47 +18,51 @@ The project files are located at `Assets/LiveShow` folder. The project includes 
   - This is where the example `ActData` and `SceneData` ScriptableObjects are located.
 
 ## Example
+
 The example scene `Assets/LiveShow/Scenes/Example` demonstrates the full pipeline with act and scene buttons.
 
+![image](https://github.com/vltmedia/Unity-Basic-Live-Show-Player-With-Scene-and-Act-Management/blob/main/Docs/images/PreviewImage.png?raw=true)
 
 ## Features
 
 - **Dynamic Act and Scene Management**:
+
   - Acts and scenes are dynamically instantiated based on ScriptableObjects.
   - Acts are now loaded using the `ShowData` ScriptableObject, which organizes a collection of acts.
   - Each act has its own list of scenes, which are displayed as buttons.
-
 - **Video Playback with Transitions**:
+
   - Smooth fade-in and fade-out transitions for videos.
   - Configurable black hold duration to eliminate blank video frames during loading.
   - Preloading ensures videos are ready before display.
-
 - **UI Integration**:
+
   - Buttons for acts and scenes dynamically populate the UI.
   - Each act and scene have indicators for their active state.
 
 ## How It Works
 
 1. **ScriptableObjects**:
+
    - `ShowData`: Represents the overall show, including its name and a list of acts (`ActData`).
    - `ActData`: Defines an act, including its name and a list of `SceneData`.
    - `SceneData`: Represents a scene with its name, input video (`videoIn`), and optional transition video (`videoOut`).
-
 2. **VideoManager**:
+
    - Centralized control for video playback.
    - Uses a `RenderTexture` to display videos on UI or 3D objects.
    - Handles fade transitions and ensures videos are preloaded.
-
 3. **SceneActManager**:
+
    - Loads data from the `ShowData` ScriptableObject.
    - Manages transitions between scenes and acts.
    - Dynamically generates act and scene buttons based on ScriptableObjects.
-
 4. **ActButtonUI**:
+
    - Handles UI for individual act buttons.
    - Toggles the visibility of scenes belonging to the act.
-
 5. **SceneButtonUI**:
+
    - Handles UI for individual scene buttons.
    - Triggers video transitions when clicked.
 
