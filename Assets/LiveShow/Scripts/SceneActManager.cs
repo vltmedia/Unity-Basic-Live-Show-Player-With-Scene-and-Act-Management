@@ -12,7 +12,8 @@ public class SceneActManager : MonoBehaviour
     public Canvas sceneCanvas;      // Reference to the VideoManager
 
     [Header("Data")]
-    public List<ActData> acts;             // List of acts to populate the UI
+    public ShowData showData;
+    public List<ActData> acts { get { return showData.acts; } set { showData.acts = value; } }        // List of acts to populate the UI
 
     private SceneData currentScene;        // Tracks the currently active scene
     public ActButtonUI currentAct;
